@@ -11,9 +11,9 @@ The main reason this project was made is because the aforementioned projects did
 acceptor didn't have full implementation for basic usage (for example, the initial coin inhibition setting was missing).
 
 The project has three folders:
-* **Documentation** - project documentation in _pdf_ and _odt_ format, and _pdf_ format of ccTalk specification version 4.6 
+* **Documentation** - project documentation in [PDF](Documentation/nbCcTalkCoinAcceptor.pdf) and [ODT](Documentation/nbCcTalkCoinAcceptor.odt) format, and PDF format of [ccTalk specification version 4.6](Documentation/cctalkPart2v4.6.pdf) 
 * **nbCcTalkCoinAcceptor_exe** - compiled WinForms application for testing with Euro currency
 * **nbCcTalkCoinAcceptor_VsProject** - whole VisualStudio project
 
 ##Getting started
-Please refer to the full documentation file _nbCcTalkCoinAcceptor.pdf_ in the Documentation folder.
+Please refer to the full documentation file [nbCcTalkCoinAcceptor.pdf](Documentation/nbCcTalkCoinAcceptor.pdf) in the Documentation folder.
