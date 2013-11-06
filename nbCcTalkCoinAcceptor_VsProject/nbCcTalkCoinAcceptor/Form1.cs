@@ -16,7 +16,7 @@ namespace nbCcTalkCoinAcceptor
     public partial class nbCoinAcceptor : Form
     {
         private CoinAcceptor _coinAcceptor;
-		public event Action<decimal> CoinAccepted;
+        public event Action<decimal> CoinAccepted;
 
         private decimal _coinValue;
         private string newline = Environment.NewLine + Environment.NewLine;
@@ -44,13 +44,15 @@ namespace nbCcTalkCoinAcceptor
             {
                 txtLog.Text += "Error while connecting to coin acceptor!" + newline;
             }
+
+            _coinAcceptor.AllowedCoins = CoinIndex.One | CoinIndex.Two | CoinIndex.Three;
         }
 
         private bool ConnectToCoinAcceptor()
         {
             Dictionary<byte, CoinTypeInfo> coins;
             coins = CoinAcceptor.DefaultConfig;
-            
+
             byte deviceNumber = 2; //device number defaults to 2 - coin acceptor
 
             //can be changed to ones liking by using SetCoins(coinsDefaultText, out coins)
@@ -59,10 +61,10 @@ namespace nbCcTalkCoinAcceptor
             string coinsDefaultText = CoinAcceptor.ConfigWord(CoinAcceptor.DefaultConfig);
 
             txtLog.Text += "Using the following connection string for coins:" + Environment.NewLine + coinsDefaultText + newline;
-                       
+
             try
             {
-                string port = "COM" + txtPortNumber.Text; 
+                string port = "COM" + txtPortNumber.Text;
                 var connection = new ConnectionRs232
                                      {
                                          PortName = port,
@@ -75,8 +77,10 @@ namespace nbCcTalkCoinAcceptor
 
                 _coinAcceptor.CoinAccepted += _coinAcceptor_CoinAccepted;
                 _coinAcceptor.ErrorMessageAccepted += _coinAcceptor_ErrorMessageAccepted;
-                
-                _coinAcceptor.Init(true);                
+
+                _coinAcceptor.Init(true);
+
+              
 
                 if (_coinAcceptor.IsInitialized)
                 {
@@ -86,29 +90,29 @@ namespace nbCcTalkCoinAcceptor
 
                 txtLog.Text += "Failed initializing the CoinAcceptor!" + newline;
                 DisposeCoinAcceptor();
-                connection.Close();                
+                connection.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());                
-            }                                                   
-            
+                MessageBox.Show(ex.ToString());
+            }
+
             return false;
         }
 
         private bool ModifyCoinAcceptorInhibitStatus()
         {
             try
-            {                                                
+            {
                 //if called without parameters they default to 255,0, meaning first 8 coins are set to accept receiving 
                 _coinAcceptor.ModifyInhibitStatus();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //txtLog.Text += ex.ToString();
                 return false;
-            }                            
+            }
         }
 
         private void DisposeCoinAcceptor()
@@ -124,7 +128,7 @@ namespace nbCcTalkCoinAcceptor
 
             _coinAcceptor.Dispose();
 
-            _coinAcceptor = null;            
+            _coinAcceptor = null;
         }
 
         void _coinAcceptor_ErrorMessageAccepted(object sender, CoinAcceptorErrorEventArgs e)
@@ -149,14 +153,15 @@ namespace nbCcTalkCoinAcceptor
             txtLog.Text += String.Format("Coin accepted: {0} ({1:X2}), path {3}. Now accepted: {2}", e.CoinName, e.CoinCode, _coinValue, e.RoutePath) + Environment.NewLine;
             labTotalMoneyIn.Text = _coinValue.ToString();
 
-			CoinAccepted(e.CoinValue);
+            if (CoinAccepted != null)
+                CoinAccepted(e.CoinValue);
 
             // There is simulator of long-working event handler
             Thread.Sleep(1000);
         }
 
         private void SetCoins(string coinsDefaultText, out Dictionary<byte, CoinTypeInfo> coins)
-        {            
+        {
             if (!CoinAcceptor.TryParseConfigWord(coinsDefaultText, out coins))
             {
                 coins = CoinAcceptor.DefaultConfig;
@@ -164,43 +169,43 @@ namespace nbCcTalkCoinAcceptor
             }
         }
 
-		#region polling
-		private void checkBox1_CheckedChanged(object sender, EventArgs e)
-		{
-			if (_coinAcceptor == null) return;
+        #region polling
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_coinAcceptor == null) return;
 
-			if (!_coinAcceptor.IsInitialized)
-				_coinAcceptor.Init(true);
+            if (!_coinAcceptor.IsInitialized)
+                _coinAcceptor.Init(true);
 
-			if (cbPolling.Checked)
-				_coinAcceptor.StartPoll();
-			else
-				_coinAcceptor.EndPoll();
-		}
-		public void StartPoll()
-		{
-			_coinAcceptor.StartPoll();
-		}
-		public void EndPoll()
-		{
-			_coinAcceptor.EndPoll();
-		}
-		#endregion
+            if (cbPolling.Checked)
+                _coinAcceptor.StartPoll();
+            else
+                _coinAcceptor.EndPoll();
+        }
+        public void StartPoll()
+        {
+            _coinAcceptor.StartPoll();
+        }
+        public void EndPoll()
+        {
+            _coinAcceptor.EndPoll();
+        }
+        #endregion
 
-		#region inhibition
-		private void cbInhibit_CheckedChanged(object sender, EventArgs e)
+        #region inhibition
+        private void cbInhibit_CheckedChanged(object sender, EventArgs e)
         {
             if (_coinAcceptor != null)
                 _coinAcceptor.IsInhibiting = cbInhibit.Checked;
         }
-		public void startInhibit()
-		{
-			_coinAcceptor.IsInhibiting = true;
-		}
-		public void stopInhibit()
-		{
-			_coinAcceptor.IsInhibiting = false;
-		}
-		#endregion
-	}
+        public void startInhibit()
+        {
+            _coinAcceptor.IsInhibiting = true;
+        }
+        public void stopInhibit()
+        {
+            _coinAcceptor.IsInhibiting = false;
+        }
+        #endregion
+    }
 }
