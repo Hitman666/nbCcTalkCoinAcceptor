@@ -93,14 +93,14 @@
             this.txtPortNumber.Name = "txtPortNumber";
             this.txtPortNumber.Size = new System.Drawing.Size(33, 20);
             this.txtPortNumber.TabIndex = 6;
-            this.txtPortNumber.Text = "6";
+            this.txtPortNumber.Text = "3";
             this.txtPortNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtLog
             // 
-            this.txtLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLog.Location = new System.Drawing.Point(11, 39);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
