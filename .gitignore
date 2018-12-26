@@ -44,6 +44,8 @@ node_modules/
 *.user
 *.sln.docstates
 
+*.vs
+
 # Build results
 
 [Dd]ebug/
