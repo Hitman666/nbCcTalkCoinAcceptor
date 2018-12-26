@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace dk.CctalkLib.Checksumms
 {
@@ -15,8 +15,8 @@ namespace dk.CctalkLib.Checksumms
 
     public interface ICctalkChecksum
     {
-        void CalcAndApply(Byte[] messageInBytes);
-		Boolean Check(Byte[] messageInBytes, Int32 offset, Int32 length);
+        void CalcAndApply(IEnumerable<byte> messageInBytes);
+		bool Check(IEnumerable<byte> messageInBytes, int offset, int length);
 
     }
 }

@@ -146,6 +146,6 @@
 		///<summary>Coin return mechanism activated ( flight deck open ) </summary>
 		CoinReturnMechanismActivated = 254,
 		///<summary>Unspecified alarm code </summary>
-		UnspecifiedAlarmCode = 255,
+		UnspecifiedAlarmCode = 255
 	}
 }

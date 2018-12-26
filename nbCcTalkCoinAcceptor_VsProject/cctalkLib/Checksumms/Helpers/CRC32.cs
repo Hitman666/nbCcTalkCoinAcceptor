@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace dk.CctalkLib.Checksumms.Helpers
 {
@@ -9,17 +10,17 @@ namespace dk.CctalkLib.Checksumms.Helpers
         public CRC32(InitialCrcValue val)
             : base(val)
         {
-            uint poly = 0xedb88320;
+            var poly = 0xedb88320;
             table = new uint[256];
             uint temp = 0;
             for (uint i = 0; i < table.Length; ++i)
             {
                 temp = i;
-                for (int j = 8; j > 0; --j)
+                for (var j = 8; j > 0; --j)
                 {
                     if ((temp & 1) == 1)
                     {
-                        temp = (uint)((temp >> 1) ^ poly);
+                        temp = (temp >> 1) ^ poly;
                     }
                     else
                     {
@@ -30,18 +31,18 @@ namespace dk.CctalkLib.Checksumms.Helpers
             }
         }
 
-        public override byte[] ComputeChecksumBytes(byte[] arr)
+        public override IEnumerable<byte> ComputeChecksumBytes(IEnumerable<byte> arr)
         {
             return BitConverter.GetBytes(ComputeChecksum(arr));
         }
 
-        protected override uint ComputeChecksum(byte[] bytes)
+        protected override uint ComputeChecksum(IEnumerable<byte> bytes)
         {
-            uint crc = 0xffffffff;
-            for (int i = 0; i < bytes.Length; ++i)
+            var crc = 0xffffffff;
+            foreach (var item in bytes)
             {
-                byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
-                crc = (uint)((crc >> 8) ^ table[index]);
+                var index = (byte)(((crc) & 0xff) ^ item);
+                crc = (crc >> 8) ^ table[index];
             }
             return ~crc;
         }

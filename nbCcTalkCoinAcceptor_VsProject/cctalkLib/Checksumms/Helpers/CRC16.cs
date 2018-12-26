@@ -1,4 +1,7 @@
-﻿namespace dk.CctalkLib.Checksumms.Helpers
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace dk.CctalkLib.Checksumms.Helpers
 {
     class CRC16 : CRC
     {
@@ -31,18 +34,19 @@
             }
         }
 
-        public override byte[] ComputeChecksumBytes(byte[] arr)
+        public override IEnumerable<byte> ComputeChecksumBytes(IEnumerable<byte> arr)
         {
-            uint crc = this.ComputeChecksum(arr);
-            return new byte[] { (byte)(crc >> 8), (byte)(crc & 0x00ff) };
+            var crc = ComputeChecksum(arr);
+            return new[] { (byte)(crc >> 8), (byte)(crc & 0x00ff) };
         }
 
-        protected override uint ComputeChecksum(byte[] bytes)
+        protected override uint ComputeChecksum(IEnumerable<byte> bytes)
         {
             ushort crc = 0;
-            for (int i = 0; i < bytes.Length; ++i)
+
+            foreach (var item in bytes)
             {
-                byte index = (byte)(crc ^ bytes[i]);
+                var index = (byte)(crc ^ item);
                 crc = (ushort)((crc >> 8) ^ table[index]);
             }
             return crc;

@@ -4,11 +4,12 @@ namespace dk.CctalkLib.Devices
 {
 	public class CoinAcceptorErrorEventArgs : EventArgs
 	{
-		public CoinAcceptorErrors Error { get; private set; }
-		public string ErrorMessage { get; private set; }
-		//public byte ErrorCode { get; private set; }
+	    public CoinAcceptorErrors Error { get; }
 
-		public CoinAcceptorErrorEventArgs(CoinAcceptorErrors error, String errorMessage)
+	    public string ErrorMessage { get; }
+	    //public byte ErrorCode { get; private set; }
+
+		public CoinAcceptorErrorEventArgs(CoinAcceptorErrors error, string errorMessage)
 		{
 			Error = error;
 			ErrorMessage = errorMessage;

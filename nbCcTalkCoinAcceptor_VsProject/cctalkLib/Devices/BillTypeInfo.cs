@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace dk.CctalkLib.Devices
+﻿namespace dk.CctalkLib.Devices
 {
 	public class BillTypeInfo
 	{
-		public BillTypeInfo(String name, Decimal value)
+		public BillTypeInfo(string name, decimal value)
 		{
 			Name = name;
 			Value = value;
 		}
 
-		public String Name { get; private set; }
-		public Decimal Value { get; private set; }
+		public string Name { get; }
+		public decimal Value { get; }
 	}
 }

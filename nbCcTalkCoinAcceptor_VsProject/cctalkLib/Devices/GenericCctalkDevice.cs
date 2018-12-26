@@ -34,7 +34,7 @@ namespace dk.CctalkLib.Devices
 			  		{6, new TimeSpan(1, 0, 0, 0, 0)},//days
 			  		{7, new TimeSpan(7, 0, 0, 0, 0)},//weeks
 			  		{8, new TimeSpan(30, 0, 0, 0, 0)},//months
-			  		{9, new TimeSpan(365, 0, 0, 0, 0)},//years
+			  		{9, new TimeSpan(365, 0, 0, 0, 0)}//years
 			  	};
 
 		static readonly Dictionary<string, CctalkDeviceTypes> DeviceTypes
@@ -56,7 +56,7 @@ namespace dk.CctalkLib.Devices
 			  		{"RNG", CctalkDeviceTypes.RNG},
 			  		{"Hopper Scale", CctalkDeviceTypes.HopperScale},
 			  		{"Coin Feeder", CctalkDeviceTypes.CoinFeeder},
-			  		{"Debug", CctalkDeviceTypes.Debug},
+			  		{"Debug", CctalkDeviceTypes.Debug}
 			  	};
 
 
@@ -66,7 +66,7 @@ namespace dk.CctalkLib.Devices
 					   {
 						   DestAddr = Address,
 						   SourceAddr = SourceAddress,
-						   Header = header,
+						   Header = header
 					   };
 		}
 
@@ -157,7 +157,7 @@ namespace dk.CctalkLib.Devices
                                  new DeviceEvent(data[3], data[4]),
                                  new DeviceEvent(data[5], data[6]),
                                  new DeviceEvent(data[7], data[8]),
-                                 new DeviceEvent(data[9], data[10]),
+                                 new DeviceEvent(data[9], data[10])
                              }
 				;
 
@@ -165,7 +165,7 @@ namespace dk.CctalkLib.Devices
 			var ret = new DeviceEventBuffer
 						  {
 							  Counter = respond.Data[0],
-							  Events = events,
+							  Events = events
 						  };
 
 			return ret;

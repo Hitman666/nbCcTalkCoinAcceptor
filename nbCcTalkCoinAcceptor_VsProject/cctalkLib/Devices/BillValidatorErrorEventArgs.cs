@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace dk.CctalkLib.Devices
 {
 	public class BillValidatorErrorEventArgs : EventArgs
 	{
 
-		public BillValidatorErrors Error { get; private set; }
-		public string ErrorMessage { get; private set; }
+		public BillValidatorErrors Error { get; }
+		public string ErrorMessage { get; }
 		//public byte ErrorCode { get; private set; }
 
-		public BillValidatorErrorEventArgs(BillValidatorErrors error, String errorMessage)
+		public BillValidatorErrorEventArgs(BillValidatorErrors error, string errorMessage)
 		{
 			Error = error;
 			ErrorMessage = errorMessage;

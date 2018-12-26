@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Text;
 using System.Timers;
-using System.Globalization;
 using dk.CctalkLib.Connections;
 
 namespace dk.CctalkLib.Devices
 {
 	public class BillValidator : IDisposable
 	{
-		const Int32 PollPeriod = 300;
+		const int PollPeriod = 300;
 
 		readonly BillValidatorCctalkDevice _rawDev = new BillValidatorCctalkDevice();
 
 		Timer _t;
-		Byte _lastEvent;
+		byte _lastEvent;
 
 		/// <summary>
 		/// Fires when notes was accepted. Only when polling is on.
@@ -30,9 +29,9 @@ namespace dk.CctalkLib.Devices
 		TimeSpan _pollInterval;
 
 
-		readonly Object _timersSyncRoot = new Object(); // for sync with timer threads only
-		readonly Dictionary<Byte, String> _errors = new Dictionary<byte, string>();
-		readonly Dictionary<Byte, BillTypeInfo> _notes = new Dictionary<Byte, BillTypeInfo>();
+		readonly object _timersSyncRoot = new object(); // for sync with timer threads only
+		readonly Dictionary<byte, string> _errors = new Dictionary<byte, string>();
+		readonly Dictionary<byte, BillTypeInfo> _notes = new Dictionary<byte, BillTypeInfo>();
 
 		#region Constructors
 
@@ -44,10 +43,10 @@ namespace dk.CctalkLib.Devices
 		/// <param name="coins">data for resolving coin codes to coin values and names. Depends on device firmware. Can be found on device case.</param>
 		/// <param name="errorNames">overriding for error nemes</param>
 		public BillValidator(
-			Byte addr,
+			byte addr,
 			ICctalkConnection configuredConnection,
-			Dictionary<Byte, BillTypeInfo> coins,
-			Dictionary<Byte, String> errorNames
+			Dictionary<byte, BillTypeInfo> coins,
+			Dictionary<byte, string> errorNames
 			)
 		{
 			if (configuredConnection == null) throw new ArgumentNullException("configuredConnection");
@@ -70,7 +69,7 @@ namespace dk.CctalkLib.Devices
 		/// <param name="addr">Device ccTalk address. 0 - broadcast</param>
 		/// <param name="configuredConnection">Connection to work. Sharing connection between seweral device object not recommended and not supported. But can work :)</param>
 		public BillValidator(
-			Byte addr,
+			byte addr,
 			ICctalkConnection configuredConnection
 			)
 			: this(addr, configuredConnection, null, null)
@@ -83,17 +82,14 @@ namespace dk.CctalkLib.Devices
 		/// <summary>
 		/// Connection used for communication with cctalk device
 		/// </summary>
-		public ICctalkConnection Connection
-		{
-			get { return _rawDev.Connection; }
-		}
+		public ICctalkConnection Connection => _rawDev.Connection;
 
 
-		/// <summary>
+	    /// <summary>
 		///  Opens connection and request main data from device (e.g. Serial number)
 		///  If there is some data in event buffer - events will be raised
 		/// </summary>
-		public void Init(Boolean ignoreLastEvents = true)
+		public void Init(bool ignoreLastEvents = true)
 		{
 			_rawDev.Connection.Open();
 
@@ -142,30 +138,30 @@ namespace dk.CctalkLib.Devices
 		/// <summary>
 		///  true - port is open, ready for sending commands
 		/// </summary>
-		public Boolean IsInitialized { get; private set; }
+		public bool IsInitialized { get; private set; }
 
 		/// <summary>
 		///  ccTalk address of device. 0 - broadcast.
 		/// </summary>
-		public Byte Address { get { return _rawDev.Address; } }
+		public byte Address => _rawDev.Address;
 
-		/// <summary>
+	    /// <summary>
 		///  Is polling is running now. Commands (as GetStatus) CAN be sent while polling.
 		/// </summary>
-		public Boolean IsPolling { get { return _t != null; } }
+		public bool IsPolling => _t != null;
 
 
-		protected String ProductCode { get; private set; }
+	    protected string ProductCode { get; private set; }
 
 		/// <summary>
 		/// Serial number of device. Value accepted from device while Init.
 		/// </summary>
-		public Int32 SerialNumber { get; private set; }
+		public int SerialNumber { get; private set; }
 
 		/// <summary>
 		///  Manufacter name of device. Value accepted from device while Init.
 		/// </summary>
-		public String Manufacturer { get; private set; }
+		public string Manufacturer { get; private set; }
 
 		/// <summary>
 		///  Type of device. Value accepted from device while Init.
@@ -178,10 +174,10 @@ namespace dk.CctalkLib.Devices
 		/// <summary>
 		///  Indicates the state, when device is rejecting all coins.
 		/// </summary>
-		public Boolean IsInhibiting
+		public bool IsInhibiting
 		{
-			get { return _isInhibiting; }
-			set
+			get => _isInhibiting;
+		    set
 			{
 				_rawDev.CmdSetMasterInhibitStatus(value);
 				_isInhibiting = value;
@@ -198,8 +194,8 @@ namespace dk.CctalkLib.Devices
 		/// </summary>
 		public TimeSpan PollInterval
 		{
-			get { return _pollInterval; }
-			set
+			get => _pollInterval;
+		    set
 			{
 				if (IsPolling)
 					throw new InvalidOperationException("Stop polling first");
@@ -223,7 +219,7 @@ namespace dk.CctalkLib.Devices
 					throw new InvalidOperationException("Init first");
 				_t = new Timer(PollPeriod)
 						{
-							AutoReset = false,
+							AutoReset = false
 						};
 				_t.Elapsed += TimerTick;
 				_t.Start();
@@ -279,8 +275,8 @@ namespace dk.CctalkLib.Devices
 			TimerTick(this, EventArgs.Empty);
 		}
 
-		Boolean _isResetExpected = false;
-		Boolean _isClearEventBufferRequested = false;
+		bool _isResetExpected;
+		bool _isClearEventBufferRequested;
 
 
 
@@ -340,7 +336,7 @@ namespace dk.CctalkLib.Devices
 			RaiseEventsByBufferHelper(buf, newEventsCount);
 		}
 
-		static Byte GetNewEventsCountHelper(Byte lastCounerVal, Byte newCounterVal)
+		static byte GetNewEventsCountHelper(byte lastCounerVal, byte newCounterVal)
 		{
 			if (newCounterVal == 0) return 0;
 
@@ -351,7 +347,7 @@ namespace dk.CctalkLib.Devices
 			return Convert.ToByte(newEventsCount);
 		}
 
-		void RaiseEventsByBufferHelper(DeviceEventBuffer buf, Byte countToShow)
+		void RaiseEventsByBufferHelper(DeviceEventBuffer buf, byte countToShow)
 		{
 			if (countToShow == 0) return;
 
@@ -360,18 +356,16 @@ namespace dk.CctalkLib.Devices
 				var ev = buf.Events[i];
 				if (ev.IsError)
 				{
-					String errMsg;
-					var errCode = (BillValidatorErrors)ev.ErrorOrRouteCode;
-					_errors.TryGetValue(ev.ErrorOrRouteCode, out errMsg);
+				    var errCode = (BillValidatorErrors)ev.ErrorOrRouteCode;
+					_errors.TryGetValue(ev.ErrorOrRouteCode, out var errMsg);
 					RaiseInvokeErrorEvent(new BillValidatorErrorEventArgs(errCode, errMsg));
 
 				}
 				else
 				{
-					BillTypeInfo billInfo;
-					_notes.TryGetValue(ev.CoinCode, out billInfo);
-					var evVal = billInfo == null ? 0 : billInfo.Value;
-					var evName = billInfo == null ? null : billInfo.Name;
+				    _notes.TryGetValue(ev.CoinCode, out var billInfo);
+					var evVal = billInfo?.Value ?? 0;
+					var evName = billInfo?.Name;
 					RaiseInvokeNotesEvent(new BillValidatorBillEventArgs(evName, evVal, ev.CoinCode, ev.ErrorOrRouteCode));
 				}
 			}
@@ -397,8 +391,7 @@ namespace dk.CctalkLib.Devices
 
 		void RaiseInvokeNotesEvent(BillValidatorBillEventArgs ea)
 		{
-			if (NotesAccepted != null)
-				NotesAccepted(this, ea);
+		    NotesAccepted?.Invoke(this, ea);
 		}
 
 
@@ -407,13 +400,13 @@ namespace dk.CctalkLib.Devices
 			Dispose(true);
 		}
 
-		void Dispose(Boolean disposing)
+		void Dispose(bool disposing)
 		{
 			UnInit();
 		}
 
 		/// <summary>
-		/// bulids correct config word from notes
+		/// builds correct config word from notes
 		/// config word structure:
 		/// {note byre code}={note value}={note name};
 		///                 ^ splitter   ^ splitter  ^entry splitter
@@ -437,7 +430,7 @@ namespace dk.CctalkLib.Devices
 		///                 ^ splitter   ^ splitter  ^entry splitter
 		/// </summary>
 		/// <param name="word">config word</param>
-		/// <param name="coins">out dictionary for parsed word, null if parsing fails</param>
+		/// <param name="notes">out dictionary for parsed word, null if parsing fails</param>
 		/// <returns>true for success, otherwise - false</returns>
 		public static bool TryParseConfigWord(string word, out Dictionary<byte, BillTypeInfo> notes)
 		{
@@ -450,7 +443,7 @@ namespace dk.CctalkLib.Devices
 					if (string.IsNullOrEmpty(coinWord))
 						continue;
 					var values = coinWord.Split('=');
-					var code = Byte.Parse(values[0]);
+					var code = byte.Parse(values[0]);
 					var value = decimal.Parse(values[1], NumberStyles.Currency);
 					var name = values.Length >= 3 ? values[2] : values[1];
 					notes[code] = new BillTypeInfo(name, value);

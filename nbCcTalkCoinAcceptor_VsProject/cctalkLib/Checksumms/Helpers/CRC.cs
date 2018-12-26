@@ -1,4 +1,6 @@
-﻿namespace dk.CctalkLib.Checksumms.Helpers
+﻿using System.Collections.Generic;
+
+namespace dk.CctalkLib.Checksumms.Helpers
 {
     abstract class CRC : ICRC
     {
@@ -9,9 +11,9 @@
 
         }
 
-        public abstract byte[] ComputeChecksumBytes(byte[] arr);
+        public abstract IEnumerable<byte> ComputeChecksumBytes(IEnumerable<byte> arr);
 
-        protected abstract uint ComputeChecksum(byte[] bytes);
+        protected abstract uint ComputeChecksum(IEnumerable<byte> bytes);
 
         #endregion
     }
