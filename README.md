@@ -15,8 +15,10 @@ The project has three folders:
 * **nbCcTalkCoinAcceptor_exe** - compiled WinForms application for testing with Euro currency
 * **nbCcTalkCoinAcceptor_VsProject** - whole VisualStudio project
 
-##Getting started
+## Getting started
 Please refer to the full documentation file [nbCcTalkCoinAcceptor.pdf](Documentation/nbCcTalkCoinAcceptor.pdf) in the Documentation folder.
 
-License: [MIT License
-](http://www.opensource.org/licenses/mit-license.php). _although, I really think that Randall said it all in [this post](https://www.rdegges.com/2016/i-dont-give-a-shit-about-licensing/)_
+## License
+
+- [MIT License
+](http://www.opensource.org/licenses/mit-license.php). _Although, I really think that Randall said it all in [this post](https://www.rdegges.com/2016/i-dont-give-a-shit-about-licensing/)._
