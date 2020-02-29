@@ -17,3 +17,6 @@ The project has three folders:
 
 ##Getting started
 Please refer to the full documentation file [nbCcTalkCoinAcceptor.pdf](Documentation/nbCcTalkCoinAcceptor.pdf) in the Documentation folder.
+
+License: [MIT License
+](http://www.opensource.org/licenses/mit-license.php). _although, I really think that Randall said it all in [this post](https://www.rdegges.com/2016/i-dont-give-a-shit-about-licensing/)_
