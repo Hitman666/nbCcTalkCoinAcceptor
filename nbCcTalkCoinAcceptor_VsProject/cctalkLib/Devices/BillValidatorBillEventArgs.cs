@@ -1,32 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace dk.CctalkLib.Devices
 {
 	public class BillValidatorBillEventArgs : EventArgs
 	{
 		/// <summary>
-		///  Name of note as was set in CouinAccpetor constructor.
+		///  Name of note as was set in CoinAccpetor constructor.
 		/// </summary>
-		public String NoteName { get; private set; }
-		public Decimal NoteValue { get; private set; }
+		public string NoteName { get; }
+		public decimal NoteValue { get; }
 
 		/// <summary>
 		///  Device`s code for note
 		/// </summary>
-		public Byte NoteCode { get; private set; }
+		public byte NoteCode { get; }
 
 		/// <summary>
 		///  Device`s route id for note.
 		/// </summary>
-		public Byte RoutePath { get; private set; }
+		public byte RoutePath { get; }
 
 		/// <summary>
 		///  Creates instance of noteAcceptornoteEventArgs
 		/// </summary>
-		public BillValidatorBillEventArgs(String noteName, Decimal noteValue, Byte noteCode, Byte routePath)
+		public BillValidatorBillEventArgs(string noteName, decimal noteValue, byte noteCode, byte routePath)
 		{
 			NoteName = noteName;
 			NoteValue = noteValue;

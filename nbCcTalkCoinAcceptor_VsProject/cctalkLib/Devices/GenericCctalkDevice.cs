@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using dk.CctalkLib.Checksumms;
@@ -13,15 +14,15 @@ namespace dk.CctalkLib.Devices
 	/// </summary>
 	public class GenericCctalkDevice
 	{
-		public static readonly Byte SourceAddress = 1;
+		public static readonly byte SourceAddress = 1;
 
-		public Byte Address { get; set; }
+		public byte Address { get; set; }
 
 		public ICctalkConnection Connection { get; set; }
 
 		protected readonly Checksum _checksumHandler = new Checksum();
 
-		static readonly Dictionary<Byte, TimeSpan> PollingIntervalUnits
+		static readonly Dictionary<byte, TimeSpan> PollingIntervalUnits
 			= new Dictionary<byte, TimeSpan>
 			  	{
 			  		// 0 - special case
@@ -33,11 +34,11 @@ namespace dk.CctalkLib.Devices
 			  		{6, new TimeSpan(1, 0, 0, 0, 0)},//days
 			  		{7, new TimeSpan(7, 0, 0, 0, 0)},//weeks
 			  		{8, new TimeSpan(30, 0, 0, 0, 0)},//months
-			  		{9, new TimeSpan(365, 0, 0, 0, 0)},//years
+			  		{9, new TimeSpan(365, 0, 0, 0, 0)}//years
 			  	};
 
-		static readonly Dictionary<String, CctalkDeviceTypes> DeviceTypes
-			= new Dictionary<String, CctalkDeviceTypes>
+		static readonly Dictionary<string, CctalkDeviceTypes> DeviceTypes
+			= new Dictionary<string, CctalkDeviceTypes>
 			  	{
 			  		{"Coin Acceptor", CctalkDeviceTypes.CoinAcceptor},
 			  		{"Payout", CctalkDeviceTypes.Payout},
@@ -55,17 +56,17 @@ namespace dk.CctalkLib.Devices
 			  		{"RNG", CctalkDeviceTypes.RNG},
 			  		{"Hopper Scale", CctalkDeviceTypes.HopperScale},
 			  		{"Coin Feeder", CctalkDeviceTypes.CoinFeeder},
-			  		{"Debug", CctalkDeviceTypes.Debug},
+			  		{"Debug", CctalkDeviceTypes.Debug}
 			  	};
 
 
-		protected CctalkMessage CreateMessage(Byte header)
+		protected CctalkMessage CreateMessage(byte header)
 		{
 			return new CctalkMessage
 					   {
 						   DestAddr = Address,
 						   SourceAddr = SourceAddress,
-						   Header = header,
+						   Header = header
 					   };
 		}
 
@@ -116,7 +117,7 @@ namespace dk.CctalkLib.Devices
 
 			return (CctalkDeviceStatus)respond.Data[0];
 		}
-		public String CmdRequestManufacturerId()
+		public string CmdRequestManufacturerId()
 		{
 			return RequestForStringHelper(246);
 
@@ -131,12 +132,12 @@ namespace dk.CctalkLib.Devices
 			return ret;
 		}
 
-		public String CmdRequestProductCode()
+		public string CmdRequestProductCode()
 		{
 			return RequestForStringHelper(244);
 		}
 
-		public String CmdRequestSoftwareRevision()
+		public string CmdRequestSoftwareRevision()
 		{
 			return RequestForStringHelper(241);
 		}
@@ -156,7 +157,7 @@ namespace dk.CctalkLib.Devices
                                  new DeviceEvent(data[3], data[4]),
                                  new DeviceEvent(data[5], data[6]),
                                  new DeviceEvent(data[7], data[8]),
-                                 new DeviceEvent(data[9], data[10]),
+                                 new DeviceEvent(data[9], data[10])
                              }
 				;
 
@@ -164,13 +165,13 @@ namespace dk.CctalkLib.Devices
 			var ret = new DeviceEventBuffer
 						  {
 							  Counter = respond.Data[0],
-							  Events = events,
+							  Events = events
 						  };
 
 			return ret;
 		}
 
-		public Int32 CmdGetSerial()
+		public int CmdGetSerial()
 		{
 			var msg = CreateMessage(242);
 			var respond = Connection.Send(msg, _checksumHandler);
@@ -178,7 +179,7 @@ namespace dk.CctalkLib.Devices
 			if (respond.DataLength < 3)
 				throw new InvalidRespondException(respond);
 
-			Int32 sn = 0;
+			var sn = 0;
 			sn += respond.Data[2];
 			sn = sn << 8;
 			sn += respond.Data[1];
@@ -189,21 +190,21 @@ namespace dk.CctalkLib.Devices
 		}
 
 
-		public void CmdSetMasterInhibitStatus(Boolean isInhibiting)
+		public void CmdSetMasterInhibitStatus(bool isInhibiting)
 		{
 			var msg = CreateMessage(228);
-			msg.Data = new[] {(Byte) (isInhibiting ? 0 : 1)};
+			msg.Data = new[] {(byte) (isInhibiting ? 0 : 1)};
 			Connection.Send(msg, _checksumHandler);
 		}
 
-		public Boolean CmdGetMasterInhibitStatus()
+		public bool CmdGetMasterInhibitStatus()
 		{
 			var msg = CreateMessage(227);
 			var respond = Connection.Send(msg, _checksumHandler);
 			if (respond.DataLength < 1)
 				throw new InvalidRespondException(respond);
 
-			bool isInhibiting = (respond.Data[0] & 0x01) == 0; // only last bit significant
+			var isInhibiting = (respond.Data[0] & 0x01) == 0; // only last bit significant
 			return isInhibiting;
 		}
 
@@ -220,12 +221,12 @@ namespace dk.CctalkLib.Devices
 		public void CmdModifyInhibitStatus(int Data1, int Data2)
 		{
 			var msg = CreateMessage(231);
-			msg.Data = new[] { (Byte)Data1, (Byte)Data2 };
+			msg.Data = new[] { (byte)Data1, (byte)Data2 };
 			Connection.Send(msg, _checksumHandler);			
 		}
 		#endregion
 
-		String RequestForStringHelper(Byte header)
+		string RequestForStringHelper(byte header)
 		{
 			var msg = CreateMessage(header);
 
@@ -240,12 +241,12 @@ namespace dk.CctalkLib.Devices
 		}
 
 
-		static String ParseAsciiHelper(Byte[] data)
+		static string ParseAsciiHelper(byte[] data)
 		{
 			return Encoding.ASCII.GetString(data);
 		}
 
-		public static CctalkMessage ParseRespond(Byte[] source, Int32 offset, Int32 length)
+		public static CctalkMessage ParseRespond(byte[] source, int offset, int length)
 		{
 			var ret = ParseMessage(source, offset, length);
 			if (ret.Header != 0)
@@ -253,7 +254,7 @@ namespace dk.CctalkLib.Devices
 			return ret;
 		}
 
-		public static CctalkMessage ParseMessage(Byte[] source, Int32 offset, Int32 length)
+		public static CctalkMessage ParseMessage(byte[] source, int offset, int length)
 		{
 			if (source == null)
 				throw new ArgumentNullException("source");
@@ -287,7 +288,7 @@ namespace dk.CctalkLib.Devices
 			return ret;
 		}
 
-		public static Boolean IsRespondComplete(Byte[] respondRawData, Int32 lengthOverride)
+		public static bool IsRespondComplete(IEnumerable<byte> respondRawData, int lengthOverride)
 		{
 			if (lengthOverride <= 4) return false;
 			if (lengthOverride > 255) return true;
@@ -296,17 +297,18 @@ namespace dk.CctalkLib.Devices
 			return expectedLen == lengthOverride;
 		}
 
-		public static Boolean IsRespondComplete(Byte[] respondRawData)
+		public static bool IsRespondComplete(IEnumerable<byte> respondRawData)
 		{
-			return IsRespondComplete(respondRawData, respondRawData.Length);
+		    var rawData = respondRawData as byte[] ?? respondRawData.ToArray();
+
+			return IsRespondComplete(rawData, rawData.Length);
 		}
 
-		private static Int32 GetExpectedLength(Byte[] respondRawData)
+		private static int GetExpectedLength(IEnumerable<byte> respondRawData)
 		{
-			if (respondRawData.Length <= CctalkMessage.MinMessageLength)
-				throw new InvalidRespondFormatException(respondRawData);
-
-			var dataLen = respondRawData[CctalkMessage.PosDataLen];
+		    var rawData = respondRawData as byte[] ?? respondRawData.ToArray();
+		    
+		    var dataLen = rawData[CctalkMessage.PosDataLen];
 			return CctalkMessage.MinMessageLength + dataLen; // 1Src+1Len+1Dest+1Header+Data+1Checksum
 		}
 

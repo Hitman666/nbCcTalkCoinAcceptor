@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace dk.CctalkLib.Checksumms.Helpers
 {
     enum CRCType
@@ -17,7 +19,7 @@ namespace dk.CctalkLib.Checksumms.Helpers
     interface ICRC
     {
 
-        byte[] ComputeChecksumBytes(byte[] arr);
+        IEnumerable<byte> ComputeChecksumBytes(IEnumerable<byte> arr);
         //ushort ComputeChecksum(byte[] bytes);
     }
     

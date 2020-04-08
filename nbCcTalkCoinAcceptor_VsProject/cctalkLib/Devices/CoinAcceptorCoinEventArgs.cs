@@ -9,25 +9,25 @@ namespace dk.CctalkLib.Devices
 	public class CoinAcceptorCoinEventArgs : EventArgs
 	{
 		/// <summary>
-		///  Name of coin as was set in CouinAccpetor constructor.
+		///  Name of coin as was set in CoinAccpetor constructor.
 		/// </summary>
-		public String CoinName { get; private set; }
-		public Decimal CoinValue { get; private set; }
+		public string CoinName { get; }
+		public decimal CoinValue { get; }
 
 		/// <summary>
 		///  Device`s code for coin
 		/// </summary>
-		public Byte CoinCode { get; private set; }
+		public byte CoinCode { get; }
 
 		/// <summary>
 		///  Device`s route id for coin.
 		/// </summary>
-		public Byte RoutePath { get; private set; }
+		public byte RoutePath { get; }
 
 		/// <summary>
 		///  Creates instance of CoinAcceptorCoinEventArgs
 		/// </summary>
-		public CoinAcceptorCoinEventArgs(String coinName, decimal coinValue, Byte coinCode, Byte routePath)
+		public CoinAcceptorCoinEventArgs(string coinName, decimal coinValue, byte coinCode, byte routePath)
 		{
 			CoinName = coinName;
 			CoinValue = coinValue;

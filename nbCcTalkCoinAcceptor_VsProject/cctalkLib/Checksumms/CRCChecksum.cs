@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using dk.CctalkLib.Checksumms.Helpers;
 using dk.CctalkLib.Messages;
 
@@ -22,45 +23,31 @@ namespace dk.CctalkLib.Checksumms
                      };
         }
 
-        public Byte[] Execute(Byte[] source)
+        public IEnumerable<byte> Execute(IEnumerable<byte> source)
         {
-            ICRC check = this.cr[CRCType.CRC16];
-            byte[] d = check.ComputeChecksumBytes(source);
+            var check = cr[CRCType.CRC16];
+            var d = check.ComputeChecksumBytes(source);
             //this.arr[2] = d[1];
             //this.arr[this.length - 1] = d[0];
             return d;
         }
 
-        public void CalcAndApply(Byte[] messageInBytes)
+        public void CalcAndApply(IEnumerable<byte> messageInBytes)
         {
-            //Byte[] sourceCut;
-            //if(offset==0&&length==source.Length)
-            //    sourceCut = source;
-            //else
-            //{
-            //   sourceCut = new byte[length];
-            //    Array.Copy(source,offset,sourceCut,0, length);
-            //}
+            var msgArry = messageInBytes.ToArray();
 
-            var tmp = new byte[messageInBytes.Length - 2];
-            tmp[0] = messageInBytes[0];
-            tmp[1] = messageInBytes[1];
+            var tmp = new byte[msgArry.Length - 2];
+            tmp[0] = msgArry[0];
+            tmp[1] = msgArry[1];
 
-            Array.Copy(messageInBytes, 3, tmp, 2, messageInBytes.Length - 4); //TODO: bug possible. not checked
+            Array.Copy(msgArry, 3, tmp, 2, msgArry.Length - 4); //TODO: bug possible. not checked
 
-            //tmp[2] = this.arr[3];
-            //for (int i = 0; i < this.arr[1]; i++)
-            //{
-            //    tmp[3 + i] = this.arr[4 + i];
-            //}
-
-
-            var cs = Execute(tmp);
-            messageInBytes[messageInBytes.Length-1] = cs[0];
-            messageInBytes[CctalkMessage.PosSourceAddr] = cs[1];
+            var cs = Execute(tmp).ToArray();
+            msgArry[msgArry.Length-1] = cs[0];
+            msgArry[CctalkMessage.PosSourceAddr] = cs[1];
         }
 
-    	public bool Check(byte[] messageInBytes, int offset, int length)
+    	public bool Check(IEnumerable<byte> messageInBytes, int offset, int length)
     	{
     		throw new NotImplementedException();
     	}

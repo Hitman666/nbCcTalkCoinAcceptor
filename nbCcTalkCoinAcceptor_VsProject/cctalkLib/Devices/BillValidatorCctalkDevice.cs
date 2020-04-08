@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace dk.CctalkLib.Devices
+﻿namespace dk.CctalkLib.Devices
 {
 	public class BillValidatorCctalkDevice : GenericCctalkDevice
 	{
@@ -40,7 +35,7 @@ namespace dk.CctalkLib.Devices
                                  new DeviceEvent(data[3], data[4]),
                                  new DeviceEvent(data[5], data[6]),
                                  new DeviceEvent(data[7], data[8]),
-                                 new DeviceEvent(data[9], data[10]),
+                                 new DeviceEvent(data[9], data[10])
                              }
 				;
 
@@ -48,7 +43,7 @@ namespace dk.CctalkLib.Devices
 			var ret = new DeviceEventBuffer
 			{
 				Counter = respond.Data[0],
-				Events = events,
+				Events = events
 			};
 
 			return ret;
@@ -82,11 +77,11 @@ namespace dk.CctalkLib.Devices
 			return (CctalkDeviceStatus)respond.Data[0];
 		}
 
-		public bool CmdModifyBillOpertingMode(Byte mode)
+		public bool CmdModifyBillOpertingMode(byte mode)
 		{
-			bool ret = false;
-			Messages.CctalkMessage msg = CreateMessage(153);
-			msg.Data = new Byte[] { mode };  //two bits on, for enable the stacker and the escrow simultaneously
+			var ret = false;
+			var msg = CreateMessage(153);
+			msg.Data = new[] { mode };  //two bits on, for enable the stacker and the escrow simultaneously
 			var respond = Connection.Send(msg, _checksumHandler);
 
 			return ret;

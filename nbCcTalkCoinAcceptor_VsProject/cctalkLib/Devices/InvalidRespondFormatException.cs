@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace dk.CctalkLib.Devices
 {
 	[Serializable]
 	internal class InvalidRespondFormatException : Exception
 	{
-		public InvalidRespondFormatException(Byte[] respondRawData) : this(respondRawData, "Invalid respond")
+		public InvalidRespondFormatException(IEnumerable<byte> respondRawData) : this(respondRawData, "Invalid respond")
 		{
 		}
 
-		public InvalidRespondFormatException(byte[] respondRawData, string message) : base(message)
+		public InvalidRespondFormatException(IEnumerable<byte> respondRawData, string message) : base(message)
 		{
 			InvalidRespondData = respondRawData;
 		}
 
-		public Byte[] InvalidRespondData { get; private set; }
+	    public IEnumerable<byte> InvalidRespondData { get; }
 
 	}
 }

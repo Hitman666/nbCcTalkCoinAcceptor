@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace dk.CctalkLib.Devices
+﻿namespace dk.CctalkLib.Devices
 {
 	public class DeviceEventBuffer
 	{
-		public Byte Counter;
+		public byte Counter;
 		public DeviceEvent[] Events;
 	}
 }

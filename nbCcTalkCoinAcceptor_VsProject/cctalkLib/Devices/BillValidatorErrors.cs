@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace dk.CctalkLib.Devices
+﻿namespace dk.CctalkLib.Devices
 {
 	public enum BillValidatorErrors
 	{

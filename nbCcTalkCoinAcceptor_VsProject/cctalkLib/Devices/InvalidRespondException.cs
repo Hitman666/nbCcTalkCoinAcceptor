@@ -17,7 +17,7 @@ namespace dk.CctalkLib.Devices
 			InvalidRespond = respond;
 		}
 
-		public CctalkMessage InvalidRespond { get; private set; }
+		public CctalkMessage InvalidRespond { get; }
 
 	}
 }

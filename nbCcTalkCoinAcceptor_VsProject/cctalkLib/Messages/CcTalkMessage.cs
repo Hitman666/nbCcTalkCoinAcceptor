@@ -10,51 +10,50 @@ namespace dk.CctalkLib.Messages
 		/// <summary>
 		/// Minimal possible message length
 		/// </summary>
-        public static readonly Byte MinMessageLength = 5;
+        public static readonly byte MinMessageLength = 5;
 
 		/// <summary>
 		///  Maximal posible data length
 		/// </summary>
-        public static readonly Byte MaxDataLength = 252;
+        public static readonly byte MaxDataLength = 252;
 
-        public static readonly Byte PosDestAddr = 0;
-        public static readonly Byte PosDataLen = 1;
-        public static readonly Byte PosSourceAddr = 2;
-        public static readonly Byte PosHeader = 3;
-        public static readonly Byte PosDataStart = 4;
+        public static readonly byte PosDestAddr = 0;
+        public static readonly byte PosDataLen = 1;
+        public static readonly byte PosSourceAddr = 2;
+        public static readonly byte PosHeader = 3;
+        public static readonly byte PosDataStart = 4;
 
 		/// <summary>
 		///  Destination device cctalk address. 0 - broadcast (single device on bus only).
 		/// </summary>
-        public Byte DestAddr { set; get; }
+        public byte DestAddr { set; get; }
 		/// <summary>
 		/// Source device cctalk address. 1 for host devices. When CRC checksum used - there is second byte for checksum.
 		/// </summary>
-        public Byte SourceAddr { set; get; }
+        public byte SourceAddr { set; get; }
 
 		/// <summary>
 		///  Message header. Command or respond code.
 		/// </summary>
-        public Byte Header { get; set; }
+        public byte Header { get; set; }
 
 		/// <summary>
 		///  Dete for message. Format depends on header.
 		/// </summary>
-        public Byte[] Data;
+        public byte[] Data;
 
 		/// <summary>
 		///  Length of data in bytes
 		/// </summary>
-        public Byte DataLength { get { return (Byte)(Data == null ? 0 : Data.Length); }
-        }
+        public byte DataLength => (byte)(Data?.Length ?? 0);
 
-		/// <summary>
+        /// <summary>
 		///  Serializes message for transfer, but does not apply checksum
 		/// </summary>
-        public Byte[] GetTransferDataNoChecksumm()
+        public byte[] GetTransferDataNoChecksumm()
         {
-            Byte[] msgData = Data;
-            var msgDataLen = (Byte)(msgData == null ? 0 : msgData.Length);
+            var msgData = Data;
+            var msgDataLen = (byte)(msgData?.Length ?? 0);
 
             if (msgDataLen > MaxDataLength) 
                 throw new InvalidOperationException("Data too long. " + GetType().Name);

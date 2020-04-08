@@ -57,6 +57,6 @@
 		CoinFeeder = 140,
 
 		///<summary>This address range may be used when developing new peripherals </summary>
-		Debug = 240,
+		Debug = 240
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.IO.Ports;
+using System.Threading;
 using dk.CctalkLib.Checksumms;
 using dk.CctalkLib.Devices;
 using dk.CctalkLib.Messages;
@@ -10,24 +10,24 @@ namespace dk.CctalkLib.Connections
 {
 
 	/// <summary>
-	///  Incapsulates routines for Com-port exchange with device.
-	///  Provides syncronization for send requests and waits for respond from device.
+	///  Encapsulates routines for Com-port exchange with device.
+	///  Provides synchronization for send requests and waits for respond from device.
 	/// </summary>
 	public class ConnectionRs232 : ICctalkConnection
 	{
-		const Int32 RespondStartTimeout = 2000;
-		const Int32 RespondDataTimeout = 50;   //time to wait next byte within message packet recive operation. Correspinds to 11.1 paragraph of ccTalk Generic Specification
+		const int RespondStartTimeout = 2000;
+		const int RespondDataTimeout = 50;   //time to wait next byte within message packet receive operation. Corresponds to 11.1 paragraph of ccTalk Generic Specification
 		// const Int32 RespondDataTimeout = 1500;
 
 
-		readonly Object _callSyncRoot = new Object();
-		readonly Object _phaseSyncRoot = new Object();
+		readonly object _callSyncRoot = new object();
+		readonly object _phaseSyncRoot = new object();
 
 		readonly SerialPort _port = new SerialPort();
-		readonly Byte[] _respondBuf = new byte[255];
+		readonly byte[] _respondBuf = new byte[255];
 		readonly AutoResetEvent _readWait = new AutoResetEvent(false);
 		private readonly Stopwatch _timer = new Stopwatch();
-		private bool _removeEcho = false;
+		private bool _removeEcho;
 
 
 
@@ -36,45 +36,45 @@ namespace dk.CctalkLib.Connections
 		/// </summary>
 		public int BaudRate
 		{
-			get { return _port.BaudRate; }
-			set { _port.BaudRate = value; }
+			get => _port.BaudRate;
+		    set => _port.BaudRate = value;
 		}
 
 		public int DataBits
 		{
-			get { return _port.DataBits; }
-			set { _port.DataBits = value; }
+			get => _port.DataBits;
+		    set => _port.DataBits = value;
 		}
 
 
 		public Parity Parity
 		{
-			get { return _port.Parity; }
-			set { _port.Parity = value; }
+			get => _port.Parity;
+		    set => _port.Parity = value;
 		}
 
 		public StopBits StopBits
 		{
-			get { return _port.StopBits; }
-			set { _port.StopBits = value; }
+			get => _port.StopBits;
+		    set => _port.StopBits = value;
 		}
 
 		public Handshake Handshake
 		{
-			get { return _port.Handshake; }
-			set { _port.Handshake = value; }
+			get => _port.Handshake;
+		    set => _port.Handshake = value;
 		}
 
-		public String PortName
+		public string PortName
 		{
-			get { return _port.PortName; }
-			set { _port.PortName = value; }
+			get => _port.PortName;
+		    set => _port.PortName = value;
 		}
 
 		public bool RemoveEcho
 		{
-			get { return _removeEcho; }
-			set { _removeEcho = value; }
+			get => _removeEcho;
+		    set => _removeEcho = value;
 		}
 
 
@@ -180,7 +180,7 @@ namespace dk.CctalkLib.Connections
 				_port.Write(msgBytes, 0, msgBytes.Length);
 
 				_port.ReadTimeout = RespondStartTimeout;
-				Int32 respondBufPos = 0;
+				var respondBufPos = 0;
 				CctalkMessage respond;
 
 
@@ -189,7 +189,7 @@ namespace dk.CctalkLib.Connections
 				{
 					try
 					{
-						var b = (Byte)_port.ReadByte();
+						var b = (byte)_port.ReadByte();
 						_port.ReadTimeout = RespondDataTimeout;
 
 						if (_removeEcho && (echoRemover < msgBytes.Length))
